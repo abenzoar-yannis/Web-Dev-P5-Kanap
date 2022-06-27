@@ -46,3 +46,54 @@ async function productDisplay() {
 
 /* l'appel de la fonction final d'affichage */
 productDisplay();
+
+/* ----- ----- GESTION DU PANIER DE LA PAGE ----- ----- */
+
+/* Fonction pour récupérer la couleur choisi */
+function whatColor() {
+  selectColor = document.getElementById("colors").value;
+}
+/* Fonction pour récupérer la quantité choisi */
+function howMany() {
+  selectQuantity = document.getElementById("quantity").value;
+  selectQuantity = parseInt(selectQuantity);
+}
+/* Fonction pour vérifier si un produit est déjà présent dans le panier */
+function checkCart() {
+  for (i = 0; i < localStorage.length; i++) {
+    if (product.name + " " + selectColor == localStorage.key(i)) {
+      return true;
+    }
+  }
+}
+/* Fonction basique pour ajouter un produit (attention - aucune condition d'ajout) */
+function addProduct(e) {
+  selectQuantity = selectQuantity + e;
+  let kanapJson = {
+    _id: product._id,
+    selectColor: selectColor,
+    amount: selectQuantity,
+  };
+  let kanapLinea = JSON.stringify(kanapJson);
+  localStorage.setItem(`${product.name} ${selectColor}`, kanapLinea);
+  alert(`${selectQuantity} ${product.name} ${selectColor} dans votre panier !`);
+}
+
+/* ----- EVENT ----- */
+/* Event pour ajouer un produit dans le panier */
+addButton.addEventListener("click", () => {
+  whatColor();
+  howMany();
+  if (selectColor === "") {
+    return alert("Vous n'avez pas sélectioné la couleur de votre produit !");
+  } else if (selectQuantity == 0) {
+    return alert("Vous n'avez pas sélectioné le nombre de produit désiré !");
+  } else if (checkCart() == true) {
+    let inCart = JSON.parse(
+      localStorage[`${product.name} ${selectColor}`]
+    ).amount;
+    addProduct(inCart);
+  } else {
+    addProduct(0);
+  }
+});
