@@ -1,5 +1,6 @@
 let productsInCart = [];
 let product;
+let articles;
 const cart = document.getElementById("cart__items");
 const totalQuantity = document.getElementById("totalQuantity");
 const totalPrice = document.getElementById("totalPrice");
@@ -95,6 +96,71 @@ function priceTotal() {
   totalPrice.innerHTML = price;
 }
 
+/* ----- ----- GESTION DES MODIFICATION APPORTE AU PANIER ----- ----- */
+
+/* Fonction permetant de rafraichir l'affichage du nombre de produit et du prix 
+total du panier */
+async function refreshProductInCart() {
+  productsInCart = [];
+  getCart();
+  await addParamToProduct();
+  quantityTotal();
+  priceTotal();
+}
+
+/* Fonction permetant de supprimer un produit du panier et de l'affichage de la page */
+function deleteAProduct(element, name, color) {
+  localStorage.removeItem(`${name} ${color}`);
+  element.remove();
+}
+
+/* Fonction permetant de modifier la quantité d'un produit dans le panier */
+function updateCart(name, color, quantity) {
+  let newSetLinea = localStorage.getItem(name + " " + color);
+  let newSetJson = JSON.parse(newSetLinea);
+  newSetJson.amount = quantity;
+  newSetLinea = JSON.stringify(newSetJson);
+  localStorage.setItem(`${name} ${color}`, newSetLinea);
+}
+
+/* ----- ----- MES EVENTLISTENERS ----- ----- */
+
+/* EVENT pour mettre à jour un changement de quantité pour un produit */
+function updateEvent() {
+  articles.forEach((article) => {
+    article.childNodes[3].childNodes[3].childNodes[1].childNodes[3].addEventListener(
+      "change",
+      () => {
+        let articleName =
+          article.childNodes[3].childNodes[1].childNodes[1].innerHTML;
+        let articleColor = article.dataset.color;
+        let articleQuantity =
+          article.childNodes[3].childNodes[3].childNodes[1].childNodes[3].value;
+        updateCart(articleName, articleColor, articleQuantity);
+        refreshProductInCart();
+      }
+    );
+  });
+}
+
+/* EVENT permettent de supprimer un article du panier et de l'affichage de la page */
+function deleteEvent() {
+  articles.forEach((article) => {
+    article.childNodes[3].childNodes[3].childNodes[3].childNodes[1].addEventListener(
+      "click",
+      () => {
+        let articleName =
+          article.childNodes[3].childNodes[1].childNodes[1].innerHTML;
+        let articleColor = article.dataset.color;
+        deleteAProduct(article, articleName, articleColor);
+        refreshProductInCart();
+      }
+    );
+  });
+}
+
+/* ----- ----- FONCTION DE FINALISATION D'AFFICHAGE DU PANIER ----- ----- */
+
 /* La fonction final permetent d'avoir notre affichage final du panier */
 async function productsDisplaying(list) {
   getCart();
@@ -102,6 +168,9 @@ async function productsDisplaying(list) {
   productDisplay(list);
   quantityTotal();
   priceTotal();
+  articles = document.querySelectorAll("article");
+  updateEvent();
+  deleteEvent();
 }
 
 /* l'appel de la fonction final */
