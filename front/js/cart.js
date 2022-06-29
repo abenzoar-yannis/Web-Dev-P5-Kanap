@@ -58,10 +58,10 @@ function displayACartProduct(article) {
               <div class="cart__item__content__settings">
                   <div class="cart__item__content__settings__quantity">
                       <p>Qté : </p>
-                      <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${article.amount}">
+                      <input type="number" onchange="updateEvent(this.value, '${article._id}', '${article.selectColor}')" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${article.amount}">
                   </div>
                   <div class="cart__item__content__settings__delete">
-                      <p class="deleteItem">Supprimer</p>
+                      <p onclick="deleteEvent('${article._id}', '${article.selectColor}')" class="deleteItem">Supprimer</p>
                   </div>
               </div>
           </div>
@@ -126,37 +126,37 @@ function updateCart(name, color, quantity) {
 /* ----- ----- MES EVENTLISTENERS ----- ----- */
 
 /* EVENT pour mettre à jour un changement de quantité pour un produit */
-function updateEvent() {
-  articles.forEach((article) => {
-    article.childNodes[3].childNodes[3].childNodes[1].childNodes[3].addEventListener(
-      "change",
-      () => {
-        let articleName =
-          article.childNodes[3].childNodes[1].childNodes[1].innerHTML;
-        let articleColor = article.dataset.color;
-        let articleQuantity =
-          article.childNodes[3].childNodes[3].childNodes[1].childNodes[3].value;
-        updateCart(articleName, articleColor, articleQuantity);
-        refreshProductInCart();
-      }
-    );
-  });
+function updateEvent(value, id, color) {
+  productsInCart.find(
+    (article) => article._id == id && article.selectColor == color
+  ).amount = value;
+  let productUpdate = productsInCart.find(
+    (article) => article._id == id && article.selectColor == color
+  );
+  updateCart(
+    productUpdate.name,
+    productUpdate.selectColor,
+    productUpdate.amount
+  );
+  refreshProductInCart();
 }
 
 /* EVENT permettent de supprimer un article du panier et de l'affichage de la page */
-function deleteEvent() {
+function deleteEvent(id, color) {
+  let deletedProduct;
+
+  deletedProduct = productsInCart.find(
+    (element) => element._id == `${id}` && element.selectColor == color
+  );
+
   articles.forEach((article) => {
-    article.childNodes[3].childNodes[3].childNodes[3].childNodes[1].addEventListener(
-      "click",
-      () => {
-        let articleName =
-          article.childNodes[3].childNodes[1].childNodes[1].innerHTML;
-        let articleColor = article.dataset.color;
-        deleteAProduct(article, articleName, articleColor);
-        refreshProductInCart();
-      }
-    );
+    if (
+      article.dataset.id + " " + article.dataset.color ==
+      deletedProduct._id + " " + deletedProduct.selectColor
+    )
+      deleteAProduct(article, deletedProduct.name, deletedProduct.selectColor);
   });
+  refreshProductInCart();
 }
 
 /* ----- ----- FONCTION DE FINALISATION D'AFFICHAGE DU PANIER ----- ----- */
@@ -169,9 +169,10 @@ async function productsDisplaying(list) {
   quantityTotal();
   priceTotal();
   articles = document.querySelectorAll("article");
-  updateEvent();
-  deleteEvent();
 }
 
 /* l'appel de la fonction final */
 productsDisplaying(productsInCart);
+
+// window.addEventListener("click", (e) => console.log(e.target.value));
+// window.addEventListener("change", (e) => console.log(e.target.value));
