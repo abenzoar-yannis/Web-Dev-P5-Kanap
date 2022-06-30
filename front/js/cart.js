@@ -176,3 +176,54 @@ productsDisplaying(productsInCart);
 
 // window.addEventListener("click", (e) => console.log(e.target.value));
 // window.addEventListener("change", (e) => console.log(e.target.value));
+
+const firstName = document.getElementById("firstName");
+const lastName = document.getElementById("lastName");
+const address = document.getElementById("address");
+const city = document.getElementById("city");
+const email = document.getElementById("email");
+
+const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
+const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
+const addressErrorMsg = document.getElementById("addressErrorMsg");
+const cityErrorMsg = document.getElementById("cityErrorMsg");
+const emailErrorMsg = document.getElementById("emailErrorMsg");
+
+let regexEmail = new RegExp("^[a-z0-9._-]+@[a-z0-9-]+\\.[a-z0-9]{2,3}$");
+let regexName = new RegExp("^[\\sa-zA-Zéèêëîïòôöûüùàäâç'-]+$");
+let regexAddress = new RegExp(
+  "^[\\d]{1,5}\\s[a-zA-Z]+\\s[\\sa-zA-Zéèêëîïòôöûüùàäâç'-]+$"
+);
+
+email.addEventListener("change", (e) => {
+  let inputText = e.target.value;
+  if (regexEmail.test(inputText)) {
+    emailErrorMsg.innerHTML = "";
+  } else emailErrorMsg.innerHTML = "email non valid !";
+});
+
+firstName.addEventListener("change", (e) => {
+  let inputText = e.target.value;
+  if (regexName.test(inputText)) firstNameErrorMsg.innerHTML = "";
+  else firstNameErrorMsg.innerHTML = "Prénom, non valid !";
+});
+
+lastName.addEventListener("change", (e) => {
+  let inputText = e.target.value;
+  if (regexName.test(inputText)) lastNameErrorMsg.innerHTML = "";
+  else lastNameErrorMsg.innerHTML = "Nom, non valid !";
+});
+
+city.addEventListener("change", (e) => {
+  let inputText = e.target.value;
+  if (regexName.test(inputText)) cityErrorMsg.innerHTML = "";
+  else cityErrorMsg.innerHTML = "Ville, non valid !";
+});
+
+address.addEventListener("change", (e) => {
+  let inputText = e.target.value;
+  if (regexAddress.test(inputText)) addressErrorMsg.innerHTML = "";
+  else
+    addressErrorMsg.innerHTML =
+      "addresse, non valid ! Respecter l'exemple : 'numéro' 'voie' 'nom de la voie'";
+});
