@@ -234,6 +234,9 @@ email.addEventListener("change", (e) => {
       "email non valid ! Respecter l'exemple suivant : votremail@mail.com";
 });
 
+/* ----- ----- ENVOI DU FORMULAIRE ----- ----- */
+// NON Terminé
+
 let objet = {
   contact: {
     firstName: "Yannis",
@@ -242,27 +245,64 @@ let objet = {
     city: "Pierre Benite",
     email: "abenzoar.yannis@hotmail.fr",
   },
-  product: ["415b7cacb65d43b2b5c1ff70f3393ad1"],
+  products: ["415b7cacb65d43b2b5c1ff70f3393ad1"],
+};
+
+var myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+
+var raw = JSON.stringify({
+  contact: {
+    firstName: "Yannis",
+    lastName: "Abenzoar",
+    address: "09 rue Marius Chardon",
+    city: "Pierre Benite",
+    email: "abenzoar.yannis@hotmail.fr",
+  },
+  products: ["415b7cacb65d43b2b5c1ff70f3393ad1"],
+});
+
+var requestOptions = {
+  method: "POST",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow",
 };
 
 const form = document.querySelector("form");
 
-form.addEventListener("submit", function (e) {
+// fetch("http://localhost:3000/api/products/order", requestOptions)
+//   .then(response => response.text())
+//   .then(result => console.log(result))
+//   .catch(error => console.log('error', error));
+function submitForm(e) {
   e.preventDefault();
-  fetch("http://localhost:3000/api/products/order", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(objet),
-  }).then((res) => {
-    console.log(res);
-    if (res.ok) {
-      return res.json();
-    }
-  });
+  fetch("http://localhost:3000/api/products/order", requestOptions)
+    .then((response) => response.text())
+    .then((result) => console.log(result))
+    .catch((error) => console.log("error", error));
+}
+
+form.addEventListener("submit", (e) => {
+  const res = submitForm(e);
 });
+
+// form.addEventListener("submit", function (e) {
+//   e.preventDefault();
+//   fetch("http://localhost:3000/api/products/order", {
+//     method: "POST",
+//     headers: {
+//       Accept: "application/json",
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify(objet),
+//   }).then((res) => {
+//     console.log(res);
+//     if (res.ok) {
+//       return res.json();
+//     }
+//   });
+// });
 
 /* method pour récupérer l'URL de la page affiché */
 // const page = window.location.href;
