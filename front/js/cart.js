@@ -177,6 +177,9 @@ productsDisplaying(productsInCart);
 // window.addEventListener("click", (e) => console.log(e.target.value));
 // window.addEventListener("change", (e) => console.log(e.target.value));
 
+/* ----- ----- VERIFICATION DES DONNEES DU FORMULAIRE ----- ----- */
+
+/* Inputs du Formulaire */
 const firstName = document.getElementById("firstName");
 const lastName = document.getElementById("lastName");
 const address = document.getElementById("address");
@@ -189,18 +192,12 @@ const addressErrorMsg = document.getElementById("addressErrorMsg");
 const cityErrorMsg = document.getElementById("cityErrorMsg");
 const emailErrorMsg = document.getElementById("emailErrorMsg");
 
-let regexEmail = new RegExp("^[a-z0-9._-]+@[a-z0-9-]+\\.[a-z0-9]{2,3}$");
-let regexName = new RegExp("^[\\sa-zA-Zéèêëîïòôöûüùàäâç'-]+$");
-let regexAddress = new RegExp(
+/* Mes Regex */
+const regexEmail = new RegExp("^[a-z0-9._-]+@[a-z0-9-]+\\.[a-z0-9]{1,3}$");
+const regexName = new RegExp("^[\\sa-zA-Zéèêëîïòôöûüùàäâç'-]+$");
+const regexAddress = new RegExp(
   "^[\\d]{1,5}\\s[a-zA-Z]+\\s[\\sa-zA-Zéèêëîïòôöûüùàäâç'-]+$"
 );
-
-email.addEventListener("change", (e) => {
-  let inputText = e.target.value;
-  if (regexEmail.test(inputText)) {
-    emailErrorMsg.innerHTML = "";
-  } else emailErrorMsg.innerHTML = "email non valid !";
-});
 
 firstName.addEventListener("change", (e) => {
   let inputText = e.target.value;
@@ -214,12 +211,6 @@ lastName.addEventListener("change", (e) => {
   else lastNameErrorMsg.innerHTML = "Nom, non valid !";
 });
 
-city.addEventListener("change", (e) => {
-  let inputText = e.target.value;
-  if (regexName.test(inputText)) cityErrorMsg.innerHTML = "";
-  else cityErrorMsg.innerHTML = "Ville, non valid !";
-});
-
 address.addEventListener("change", (e) => {
   let inputText = e.target.value;
   if (regexAddress.test(inputText)) addressErrorMsg.innerHTML = "";
@@ -227,3 +218,62 @@ address.addEventListener("change", (e) => {
     addressErrorMsg.innerHTML =
       "addresse, non valid ! Respecter l'exemple : 'numéro' 'voie' 'nom de la voie'";
 });
+
+city.addEventListener("change", (e) => {
+  let inputText = e.target.value;
+  if (regexName.test(inputText)) cityErrorMsg.innerHTML = "";
+  else cityErrorMsg.innerHTML = "Ville, non valid !";
+});
+
+email.addEventListener("change", (e) => {
+  let inputText = e.target.value;
+  if (regexEmail.test(inputText)) {
+    emailErrorMsg.innerHTML = "";
+  } else
+    emailErrorMsg.innerHTML =
+      "email non valid ! Respecter l'exemple suivant : votremail@mail.com";
+});
+
+let objet = {
+  contact: {
+    firstName: "Yannis",
+    lastName: "Abenzoar",
+    address: "09 rue Marius Chardon",
+    city: "Pierre Benite",
+    email: "abenzoar.yannis@hotmail.fr",
+  },
+  product: ["415b7cacb65d43b2b5c1ff70f3393ad1"],
+};
+
+const form = document.querySelector("form");
+
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+  fetch("http://localhost:3000/api/products/order", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(objet),
+  }).then((res) => {
+    console.log(res);
+    if (res.ok) {
+      return res.json();
+    }
+  });
+});
+
+/* method pour récupérer l'URL de la page affiché */
+// const page = window.location.href;
+// const url = new URL(page);
+// const productId = url.searchParams.get("id");
+
+// contact: {
+//     firstName: string,
+//     lastName: string,
+//     address: string,
+//     city: string,
+//     email: string
+// }
+// products: [string] <-- array of product _id
