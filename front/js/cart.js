@@ -263,13 +263,18 @@ inputEmail.addEventListener("change", (e) => {
 /* ----- ----- ENVOI DU FORMULAIRE ----- ----- */
 // NON Terminé
 
-function createContact() {
-  objetSend.contact.firstName = exportInput(testName, inputFirstName);
-  objetSend.contact.lastName = exportInput(testName, inputLastName);
-  objetSend.contact.address = exportInput(testAddress, inputAddress);
-  objetSend.contact.city = exportInput(testName, inputCity);
-  objetSend.contact.email = exportInput(testEmail, inputEmail);
-}
+const form = document.querySelector("form");
+let rawOrder;
+
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+
+let requestOptions = {
+  method: "POST",
+  headers: myHeaders,
+  body: rawOrder,
+  redirect: "follow",
+};
 
 let objetSend = {
   contact: {
@@ -279,31 +284,41 @@ let objetSend = {
     city: "",
     email: "",
   },
-  products: ["415b7cacb65d43b2b5c1ff70f3393ad1"],
+  products: [],
 };
 
-var myHeaders = new Headers();
-myHeaders.append("Content-Type", "application/json");
+function createContact() {
+  objetSend.contact.firstName = exportInput(testName, inputFirstName);
+  objetSend.contact.lastName = exportInput(testName, inputLastName);
+  objetSend.contact.address = exportInput(testAddress, inputAddress);
+  objetSend.contact.city = exportInput(testName, inputCity);
+  objetSend.contact.email = exportInput(testEmail, inputEmail);
+}
 
-var raw = JSON.stringify({
-  contact: {
-    firstName: "Yannis",
-    lastName: "Abenzoar",
-    address: "09 rue Marius Chardon",
-    city: "Pierre Benite",
-    email: "abenzoar.yannis@hotmail.fr",
-  },
-  products: ["415b7cacb65d43b2b5c1ff70f3393ad1"],
-});
+function createCommande() {
+  for (i = 0; i < productsInCart.length; i++) {
+    objetSend.products.push(productsInCart[i]._id);
+  }
+}
 
-var requestOptions = {
-  method: "POST",
-  headers: myHeaders,
-  body: raw,
-  redirect: "follow",
-};
+function setSendOrder(order) {
+  rawOrder = JSON.stringify(order);
+}
 
-const form = document.querySelector("form");
+// createContact();
+// createCommande();
+// setSendOrder(objetSend);
+
+// let raw = JSON.stringify({
+//   contact: {
+//     firstName: "Yannis",
+//     lastName: "Abenzoar",
+//     address: "09 rue Marius Chardon",
+//     city: "Pierre Benite",
+//     email: "abenzoar.yannis@hotmail.fr",
+//   },
+//   products: ["415b7cacb65d43b2b5c1ff70f3393ad1"],
+// });
 
 // fetch("http://localhost:3000/api/products/order", requestOptions)
 //   .then(response => response.text())
