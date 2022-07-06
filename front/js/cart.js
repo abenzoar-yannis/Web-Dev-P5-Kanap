@@ -180,11 +180,11 @@ productsDisplaying(productsInCart);
 /* ----- ----- VERIFICATION DES DONNEES DU FORMULAIRE ----- ----- */
 
 /* Inputs du Formulaire */
-const firstName = document.getElementById("firstName");
-const lastName = document.getElementById("lastName");
-const address = document.getElementById("address");
-const city = document.getElementById("city");
-const email = document.getElementById("email");
+const inputFirstName = document.getElementById("firstName");
+const inputLastName = document.getElementById("lastName");
+const inputAddress = document.getElementById("address");
+const inputCity = document.getElementById("city");
+const inputEmail = document.getElementById("email");
 
 const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
 const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
@@ -193,41 +193,67 @@ const cityErrorMsg = document.getElementById("cityErrorMsg");
 const emailErrorMsg = document.getElementById("emailErrorMsg");
 
 /* Mes Regex */
-const regexEmail = new RegExp("^[a-z0-9._-]+@[a-z0-9-]+\\.[a-z0-9]{1,3}$");
+const regexEmail = new RegExp("^[a-z0-9._-]+@[a-z0-9-]+\\.[a-z0-9]{2,3}$");
 const regexName = new RegExp("^[\\sa-zA-Zéèêëîïòôöûüùàäâç'-]+$");
 const regexAddress = new RegExp(
   "^[\\d]{1,5}\\s[a-zA-Z]+\\s[\\sa-zA-Zéèêëîïòôöûüùàäâç'-]+$"
 );
 
-firstName.addEventListener("change", (e) => {
+function testEmail(input) {
+  if (regexEmail.test(input)) {
+    return true;
+  } else return false;
+}
+function testName(input) {
+  if (regexName.test(input)) {
+    return true;
+  } else return false;
+}
+function testAddress(input) {
+  if (regexAddress.test(input)) {
+    return true;
+  } else return false;
+}
+
+function exportInput(functionTest, input) {
+  let inputExport = input.value;
+  if (functionTest(input.value)) {
+    return inputExport;
+  } else
+    alert(
+      inputExport + " : N'est pas pas valide. Veillez vérifier le formulaire !"
+    );
+}
+
+inputFirstName.addEventListener("change", (e) => {
   let inputText = e.target.value;
-  if (regexName.test(inputText)) firstNameErrorMsg.innerHTML = "";
+  if (testName(inputText)) firstNameErrorMsg.innerHTML = "";
   else firstNameErrorMsg.innerHTML = "Prénom, non valid !";
 });
 
-lastName.addEventListener("change", (e) => {
+inputLastName.addEventListener("change", (e) => {
   let inputText = e.target.value;
-  if (regexName.test(inputText)) lastNameErrorMsg.innerHTML = "";
+  if (testName(inputText)) lastNameErrorMsg.innerHTML = "";
   else lastNameErrorMsg.innerHTML = "Nom, non valid !";
 });
 
-address.addEventListener("change", (e) => {
+inputAddress.addEventListener("change", (e) => {
   let inputText = e.target.value;
-  if (regexAddress.test(inputText)) addressErrorMsg.innerHTML = "";
+  if (testAddress(inputText)) addressErrorMsg.innerHTML = "";
   else
     addressErrorMsg.innerHTML =
-      "addresse, non valid ! Respecter l'exemple : 'numéro' 'voie' 'nom de la voie'";
+      "adresse, non valid ! Respecter l'exemple : 'numéro' 'voie' 'nom de la voie'";
 });
 
-city.addEventListener("change", (e) => {
+inputCity.addEventListener("change", (e) => {
   let inputText = e.target.value;
-  if (regexName.test(inputText)) cityErrorMsg.innerHTML = "";
+  if (testName(inputText)) cityErrorMsg.innerHTML = "";
   else cityErrorMsg.innerHTML = "Ville, non valid !";
 });
 
-email.addEventListener("change", (e) => {
+inputEmail.addEventListener("change", (e) => {
   let inputText = e.target.value;
-  if (regexEmail.test(inputText)) {
+  if (testEmail(inputText)) {
     emailErrorMsg.innerHTML = "";
   } else
     emailErrorMsg.innerHTML =
@@ -237,13 +263,21 @@ email.addEventListener("change", (e) => {
 /* ----- ----- ENVOI DU FORMULAIRE ----- ----- */
 // NON Terminé
 
-let objet = {
+function createContact() {
+  objetSend.contact.firstName = exportInput(testName, inputFirstName);
+  objetSend.contact.lastName = exportInput(testName, inputLastName);
+  objetSend.contact.address = exportInput(testAddress, inputAddress);
+  objetSend.contact.city = exportInput(testName, inputCity);
+  objetSend.contact.email = exportInput(testEmail, inputEmail);
+}
+
+let objetSend = {
   contact: {
-    firstName: "Yannis",
-    lastName: "Abenzoar",
-    address: "09 rue Marius Chardon",
-    city: "Pierre Benite",
-    email: "abenzoar.yannis@hotmail.fr",
+    firstName: "",
+    lastName: "",
+    address: "",
+    city: "",
+    email: "",
   },
   products: ["415b7cacb65d43b2b5c1ff70f3393ad1"],
 };
