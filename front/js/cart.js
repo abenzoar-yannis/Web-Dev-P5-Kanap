@@ -215,16 +215,6 @@ function testAddress(input) {
   } else return false;
 }
 
-function exportInput(functionTest, input) {
-  let inputExport = input.value;
-  if (functionTest(input.value)) {
-    return inputExport;
-  } else
-    alert(
-      inputExport + " : N'est pas pas valide. Veillez vérifier le formulaire !"
-    );
-}
-
 inputFirstName.addEventListener("change", (e) => {
   let inputText = e.target.value;
   if (testName(inputText)) firstNameErrorMsg.innerHTML = "";
@@ -264,18 +254,6 @@ inputEmail.addEventListener("change", (e) => {
 // NON Terminé
 
 const form = document.querySelector("form");
-let rawOrder;
-
-const myHeaders = new Headers();
-myHeaders.append("Content-Type", "application/json");
-
-let requestOptions = {
-  method: "POST",
-  headers: myHeaders,
-  body: rawOrder,
-  redirect: "follow",
-};
-
 let objetSend = {
   contact: {
     firstName: "",
@@ -286,6 +264,16 @@ let objetSend = {
   },
   products: [],
 };
+
+function exportInput(functionTest, input) {
+  let inputExport = input.value;
+  if (functionTest(input.value)) {
+    return inputExport;
+  } else
+    alert(
+      inputExport + " : N'est pas pas valide. Veillez vérifier le formulaire !"
+    );
+}
 
 function createContact() {
   objetSend.contact.firstName = exportInput(testName, inputFirstName);
@@ -305,30 +293,51 @@ function setSendOrder(order) {
   rawOrder = JSON.stringify(order);
 }
 
-// createContact();
-// createCommande();
-// setSendOrder(objetSend);
-
-// let raw = JSON.stringify({
-//   contact: {
-//     firstName: "Yannis",
-//     lastName: "Abenzoar",
-//     address: "09 rue Marius Chardon",
-//     city: "Pierre Benite",
-//     email: "abenzoar.yannis@hotmail.fr",
-//   },
-//   products: ["415b7cacb65d43b2b5c1ff70f3393ad1"],
-// });
-
 // fetch("http://localhost:3000/api/products/order", requestOptions)
 //   .then(response => response.text())
 //   .then(result => console.log(result))
 //   .catch(error => console.log('error', error));
 function submitForm(e) {
   e.preventDefault();
+
+  // createContact();
+  // createCommande();
+  // setSendOrder(objetSend);
+
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  let productsCommande = [];
+
+  for (i = 0; i < productsInCart.length; i++) {
+    productsCommande.push(productsInCart[i]._id);
+  }
+  console.log(productsCommande);
+
+  let rawOrder = JSON.stringify({
+    contact: {
+      firstName: inputFirstName.value,
+      lastName: inputLastName.value,
+      address: inputAddress.value,
+      city: inputCity.value,
+      email: inputEmail.value,
+    },
+    products: productsCommande,
+  });
+  console.log(rawOrder);
+
+  let requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: rawOrder,
+    redirect: "follow",
+  };
+
   fetch("http://localhost:3000/api/products/order", requestOptions)
     .then((response) => response.text())
-    .then((result) => console.log(result))
+    .then((result) => {
+      let order = JSON.parse(result);
+      console.log(order);
+    })
     .catch((error) => console.log("error", error));
 }
 
