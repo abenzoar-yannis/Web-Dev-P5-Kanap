@@ -337,8 +337,19 @@ function submitForm(e) {
     .then((result) => {
       let order = JSON.parse(result);
       console.log(order);
+      return order;
     })
-    .catch((error) => console.log("error", error));
+    .catch((error) => console.log("error", error))
+    .then((value) => {
+      console.log(value);
+      let orderId = value.orderId;
+      const url = new URL(window.location.href);
+      console.log(url.origin);
+      let route = "/front/html/confirmation.html";
+      let confirm = `${url.origin}${route}?orderid=${orderId}`;
+      window.location.href = confirm;
+      console.log(confirm);
+    });
 }
 
 form.addEventListener("submit", (e) => {
