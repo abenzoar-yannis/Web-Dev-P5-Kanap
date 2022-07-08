@@ -294,47 +294,55 @@ inputCity.addEventListener("change", () => {
 function submitForm(e) {
   e.preventDefault();
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+  if (
+    testFirstName() &&
+    testLastName &&
+    testAddress() &&
+    testCity() &&
+    testEmail()
+  ) {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
 
-  let productsCommande = [];
+    let productsCommande = [];
 
-  for (i = 0; i < productsInCart.length; i++) {
-    productsCommande.push(productsInCart[i]._id);
-  }
+    for (i = 0; i < productsInCart.length; i++) {
+      productsCommande.push(productsInCart[i]._id);
+    }
 
-  let rawOrder = JSON.stringify({
-    contact: {
-      firstName: inputFirstName.value,
-      lastName: inputLastName.value,
-      address: inputAddress.value,
-      city: inputCity.value,
-      email: inputEmail.value,
-    },
-    products: productsCommande,
-  });
-
-  let requestOptions = {
-    method: "POST",
-    headers: myHeaders,
-    body: rawOrder,
-    redirect: "follow",
-  };
-
-  fetch("http://localhost:3000/api/products/order", requestOptions)
-    .then((response) => response.text())
-    .then((result) => {
-      let order = JSON.parse(result);
-      return order;
-    })
-    .catch((error) => console.log("error", error))
-    .then((value) => {
-      let orderId = value.orderId;
-      const url = new URL(window.location.href);
-      let route = "/front/html/confirmation.html";
-      let confirm = `${url.origin}${route}?orderid=${orderId}`;
-      window.location.href = confirm;
+    let rawOrder = JSON.stringify({
+      contact: {
+        firstName: inputFirstName.value,
+        lastName: inputLastName.value,
+        address: inputAddress.value,
+        city: inputCity.value,
+        email: inputEmail.value,
+      },
+      products: productsCommande,
     });
+
+    let requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: rawOrder,
+      redirect: "follow",
+    };
+
+    fetch("http://localhost:3000/api/products/order", requestOptions)
+      .then((response) => response.text())
+      .then((result) => {
+        let order = JSON.parse(result);
+        return order;
+      })
+      .catch((error) => console.log("error", error))
+      .then((value) => {
+        let orderId = value.orderId;
+        const url = new URL(window.location.href);
+        let route = "/front/html/confirmation.html";
+        let confirm = `${url.origin}${route}?orderid=${orderId}`;
+        window.location.href = confirm;
+      });
+  }
 }
 
 /* EVENT -- déclenchement de la soumission du formulaire */
