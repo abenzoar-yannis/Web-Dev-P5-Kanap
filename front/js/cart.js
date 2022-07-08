@@ -202,81 +202,90 @@ const regexAddress = new RegExp(
   "^[\\d]{1,5}\\s[a-zA-Z]+\\s[\\sa-zA-Zéèêëîïòôöûüùàäâç'-]+$"
 );
 
-/* fonction de test des chaîne de caractère avec des regex */
-function testEmail(input) {
-  if (regexEmail.test(input)) {
+/* Mes fonction de test des champs du formulaire */
+function testFirstName() {
+  if (regexNames.test(inputFirstName.value)) {
+    firstNameErrorMsg.innerHTML = "";
     return true;
-  } else return false;
-}
-function testName(input) {
-  if (regexNames.test(input)) {
-    return true;
-  } else return false;
-}
-function testAddress(input) {
-  if (regexAddress.test(input)) {
-    return true;
-  } else return false;
+  } else if (inputFirstName.value == "") {
+    firstNameErrorMsg.innerHTML =
+      "N'oubliez pas de remplir le champ avec votre prénom";
+    return false;
+  } else firstNameErrorMsg.innerHTML = "Prénom, non valid !";
+  return false;
 }
 
-/*
-Refaire les event en y créant une function principale, pour quelle 
-soit réutilisé lors de l'envois du formulaire. Avoir une option qui 
-diférencie une mauvais valeur et une valeur vide.
-*/
+function testLastName() {
+  if (regexNames.test(inputLastName.value)) {
+    lastNameErrorMsg.innerHTML = "";
+    return true;
+  } else if (inputLastName.value == "") {
+    lastNameErrorMsg.innerHTML =
+      "N'oubliez pas de remplir le champ avec votre Nom";
+    return false;
+  } else lastNameErrorMsg.innerHTML = "Nom, non valid !";
+  return false;
+}
 
-// function testInput(functionTest, input) {
-//   let inputExport = input.value;
-//   if (functionTest(input.value)) {
-//     return inputExport;
-//   } else
-//     alert(
-//       inputExport + " : N'est pas pas valide. Veillez vérifier le formulaire !"
-//     );
-// }
-
-// function createContact() {
-//   testInput(testName, inputFirstName);
-//   testInput(testName, inputLastName);
-//   testInput(testAddress, inputAddress);
-//   testInput(testName, inputCity);
-//   testInput(testEmail, inputEmail);
-// }
-
-/* EVENTS -- test des valeur entré dans les emplacement de furmulaire */
-inputFirstName.addEventListener("change", (e) => {
-  let inputText = e.target.value;
-  if (testName(inputText)) firstNameErrorMsg.innerHTML = "";
-  else firstNameErrorMsg.innerHTML = "Prénom, non valid !";
-});
-
-inputLastName.addEventListener("change", (e) => {
-  let inputText = e.target.value;
-  if (testName(inputText)) lastNameErrorMsg.innerHTML = "";
-  else lastNameErrorMsg.innerHTML = "Nom, non valid !";
-});
-
-inputAddress.addEventListener("change", (e) => {
-  let inputText = e.target.value;
-  if (testAddress(inputText)) addressErrorMsg.innerHTML = "";
-  else
+function testAddress() {
+  if (regexAddress.test(inputAddress.value)) {
+    addressErrorMsg.innerHTML = "";
+    return true;
+  } else if (inputAddress.value == "") {
+    addressErrorMsg.innerHTML =
+      "N'oubliez pas de remplir le champ avec votre adresse";
+    return false;
+  } else
     addressErrorMsg.innerHTML =
       "adresse, non valid ! Respecter l'exemple : 'numéro' 'voie' 'nom de la voie'";
-});
+  return false;
+}
 
-inputCity.addEventListener("change", (e) => {
-  let inputText = e.target.value;
-  if (testName(inputText)) cityErrorMsg.innerHTML = "";
-  else cityErrorMsg.innerHTML = "Ville, non valid !";
-});
+function testCity() {
+  if (regexNames.test(inputCity.value)) {
+    cityErrorMsg.innerHTML = "";
+    return true;
+  } else if (inputCity.value == "") {
+    cityErrorMsg.innerHTML =
+      "N'oubliez pas de remplir le champ avec votre ville";
+    return false;
+  } else cityErrorMsg.innerHTML = "Ville, non valid !";
+  return false;
+}
 
-inputEmail.addEventListener("change", (e) => {
-  let inputText = e.target.value;
-  if (testEmail(inputText)) {
+function testEmail() {
+  if (regexEmail.test(inputEmail.value)) {
     emailErrorMsg.innerHTML = "";
+    return true;
+  } else if (inputEmail.value == "") {
+    emailErrorMsg.innerHTML =
+      "N'oubliez pas de remplir le champ avec votre email";
+    return false;
   } else
     emailErrorMsg.innerHTML =
       "email non valid ! Respecter l'exemple suivant : votremail@mail.com";
+  return false;
+}
+
+/* EVENTS des diférent champs du formulaire */
+inputFirstName.addEventListener("change", () => {
+  testFirstName();
+});
+
+inputEmail.addEventListener("change", () => {
+  testEmail();
+});
+
+inputLastName.addEventListener("change", () => {
+  testLastName();
+});
+
+inputAddress.addEventListener("change", () => {
+  testAddress();
+});
+
+inputCity.addEventListener("change", () => {
+  testCity();
 });
 
 /* ----- ----- ENVOI DU FORMULAIRE ----- ----- */
