@@ -9,7 +9,8 @@ async function getAllProducts() {
     .then((res) => res.json())
     .then((data) => {
       products = data;
-    });
+    })
+    .catch((error) => console.log("error", error));
 }
 
 /* Fonction permetant d'afficher un article sur la page */

@@ -22,7 +22,8 @@ async function getProducts() {
     .then((res) => res.json())
     .then((data) => {
       product = data;
-    });
+    })
+    .catch((error) => console.log("error", error));
 }
 
 /* Fonction permetant d'afficher un article sur la page */
@@ -47,7 +48,7 @@ async function productDisplay() {
 /* l'appel de la fonction final d'affichage */
 productDisplay();
 
-/* ----- ----- GESTION DU PANIER DE LA PAGE ----- ----- */
+/* ----- ----- GESTION DE LA MISE AU PANIER DU PRODUIT ----- ----- */
 
 /* Fonction pour récupérer la couleur choisi */
 function whatColor() {
@@ -66,7 +67,7 @@ function checkCart() {
     }
   }
 }
-/* Fonction basique pour ajouter un produit (attention - aucune condition d'ajout) */
+/* Fonction basique pour ajouter un produit */
 function addProduct(e) {
   selectQuantity = selectQuantity + e;
   let kanapJson = {

@@ -5,6 +5,19 @@ const cart = document.getElementById("cart__items");
 const totalQuantity = document.getElementById("totalQuantity");
 const totalPrice = document.getElementById("totalPrice");
 
+/* Inputs du Formulaire */
+const inputFirstName = document.getElementById("firstName");
+const inputLastName = document.getElementById("lastName");
+const inputAddress = document.getElementById("address");
+const inputCity = document.getElementById("city");
+const inputEmail = document.getElementById("email");
+
+const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
+const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
+const addressErrorMsg = document.getElementById("addressErrorMsg");
+const cityErrorMsg = document.getElementById("cityErrorMsg");
+const emailErrorMsg = document.getElementById("emailErrorMsg");
+
 /* ----- ----- GESTION DE L AFFICHAGE DU PANIER ----- ----- */
 
 /* Une boucle pour récupérer 
@@ -27,7 +40,8 @@ async function getProduct(id) {
     .then((res) => res.json())
     .then((data) => {
       product = data;
-    });
+    })
+    .catch((error) => console.log("error", error));
 }
 
 /* Fonction pour récupérer les information supplémentaire d'un produit
@@ -179,19 +193,6 @@ productsDisplaying(productsInCart);
 
 /* ----- ----- VERIFICATION DES DONNEES DU FORMULAIRE ----- ----- */
 
-/* Inputs du Formulaire */
-const inputFirstName = document.getElementById("firstName");
-const inputLastName = document.getElementById("lastName");
-const inputAddress = document.getElementById("address");
-const inputCity = document.getElementById("city");
-const inputEmail = document.getElementById("email");
-
-const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
-const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
-const addressErrorMsg = document.getElementById("addressErrorMsg");
-const cityErrorMsg = document.getElementById("cityErrorMsg");
-const emailErrorMsg = document.getElementById("emailErrorMsg");
-
 /* Mes Regex */
 const regexEmail = new RegExp("^[a-z0-9._-]+@[a-z0-9-]+\\.[a-z0-9]{2,3}$");
 const regexName = new RegExp("^[\\sa-zA-Zéèêëîïòôöûüùàäâç'-]+$");
@@ -283,35 +284,17 @@ function createContact() {
   objetSend.contact.email = exportInput(testEmail, inputEmail);
 }
 
-function createCommande() {
-  for (i = 0; i < productsInCart.length; i++) {
-    objetSend.products.push(productsInCart[i]._id);
-  }
-}
-
-function setSendOrder(order) {
-  rawOrder = JSON.stringify(order);
-}
-
-// fetch("http://localhost:3000/api/products/order", requestOptions)
-//   .then(response => response.text())
-//   .then(result => console.log(result))
-//   .catch(error => console.log('error', error));
 function submitForm(e) {
   e.preventDefault();
 
-  // createContact();
-  // createCommande();
-  // setSendOrder(objetSend);
-
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
+
   let productsCommande = [];
 
   for (i = 0; i < productsInCart.length; i++) {
     productsCommande.push(productsInCart[i]._id);
   }
-  console.log(productsCommande);
 
   let rawOrder = JSON.stringify({
     contact: {
@@ -323,7 +306,6 @@ function submitForm(e) {
     },
     products: productsCommande,
   });
-  console.log(rawOrder);
 
   let requestOptions = {
     method: "POST",
@@ -336,53 +318,18 @@ function submitForm(e) {
     .then((response) => response.text())
     .then((result) => {
       let order = JSON.parse(result);
-      console.log(order);
       return order;
     })
     .catch((error) => console.log("error", error))
     .then((value) => {
-      console.log(value);
       let orderId = value.orderId;
       const url = new URL(window.location.href);
-      console.log(url.origin);
       let route = "/front/html/confirmation.html";
       let confirm = `${url.origin}${route}?orderid=${orderId}`;
       window.location.href = confirm;
-      console.log(confirm);
     });
 }
 
 form.addEventListener("submit", (e) => {
-  const res = submitForm(e);
+  submitForm(e);
 });
-
-// form.addEventListener("submit", function (e) {
-//   e.preventDefault();
-//   fetch("http://localhost:3000/api/products/order", {
-//     method: "POST",
-//     headers: {
-//       Accept: "application/json",
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(objet),
-//   }).then((res) => {
-//     console.log(res);
-//     if (res.ok) {
-//       return res.json();
-//     }
-//   });
-// });
-
-/* method pour récupérer l'URL de la page affiché */
-// const page = window.location.href;
-// const url = new URL(page);
-// const productId = url.searchParams.get("id");
-
-// contact: {
-//     firstName: string,
-//     lastName: string,
-//     address: string,
-//     city: string,
-//     email: string
-// }
-// products: [string] <-- array of product _id
