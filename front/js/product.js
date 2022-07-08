@@ -11,7 +11,7 @@ let selectQuantity = 0;
 
 /* ----- ----- GESTION DE L AFFICHAGE DE LA PAGE ----- ----- */
 
-/* method pour récupérer l'URL de la page affiché */
+/* method pour récupérer l'id dans l'URL de la page affiché */
 const page = window.location.href;
 const url = new URL(page);
 const productId = url.searchParams.get("id");

@@ -6,6 +6,8 @@ const totalQuantity = document.getElementById("totalQuantity");
 const totalPrice = document.getElementById("totalPrice");
 
 /* Inputs du Formulaire */
+const form = document.querySelector("form");
+
 const inputFirstName = document.getElementById("firstName");
 const inputLastName = document.getElementById("lastName");
 const inputAddress = document.getElementById("address");
@@ -195,18 +197,19 @@ productsDisplaying(productsInCart);
 
 /* Mes Regex */
 const regexEmail = new RegExp("^[a-z0-9._-]+@[a-z0-9-]+\\.[a-z0-9]{2,3}$");
-const regexName = new RegExp("^[\\sa-zA-Zéèêëîïòôöûüùàäâç'-]+$");
+const regexNames = new RegExp("^[\\sa-zA-Zéèêëîïòôöûüùàäâç'-]+$");
 const regexAddress = new RegExp(
   "^[\\d]{1,5}\\s[a-zA-Z]+\\s[\\sa-zA-Zéèêëîïòôöûüùàäâç'-]+$"
 );
 
+/* fonction de test des chaîne de caractère avec des regex */
 function testEmail(input) {
   if (regexEmail.test(input)) {
     return true;
   } else return false;
 }
 function testName(input) {
-  if (regexName.test(input)) {
+  if (regexNames.test(input)) {
     return true;
   } else return false;
 }
@@ -216,6 +219,31 @@ function testAddress(input) {
   } else return false;
 }
 
+/*
+Refaire les event en y créant une function principale, pour quelle 
+soit réutilisé lors de l'envois du formulaire. Avoir une option qui 
+diférencie une mauvais valeur et une valeur vide.
+*/
+
+// function testInput(functionTest, input) {
+//   let inputExport = input.value;
+//   if (functionTest(input.value)) {
+//     return inputExport;
+//   } else
+//     alert(
+//       inputExport + " : N'est pas pas valide. Veillez vérifier le formulaire !"
+//     );
+// }
+
+// function createContact() {
+//   testInput(testName, inputFirstName);
+//   testInput(testName, inputLastName);
+//   testInput(testAddress, inputAddress);
+//   testInput(testName, inputCity);
+//   testInput(testEmail, inputEmail);
+// }
+
+/* EVENTS -- test des valeur entré dans les emplacement de furmulaire */
 inputFirstName.addEventListener("change", (e) => {
   let inputText = e.target.value;
   if (testName(inputText)) firstNameErrorMsg.innerHTML = "";
@@ -252,38 +280,8 @@ inputEmail.addEventListener("change", (e) => {
 });
 
 /* ----- ----- ENVOI DU FORMULAIRE ----- ----- */
-// NON Terminé
 
-const form = document.querySelector("form");
-let objetSend = {
-  contact: {
-    firstName: "",
-    lastName: "",
-    address: "",
-    city: "",
-    email: "",
-  },
-  products: [],
-};
-
-function exportInput(functionTest, input) {
-  let inputExport = input.value;
-  if (functionTest(input.value)) {
-    return inputExport;
-  } else
-    alert(
-      inputExport + " : N'est pas pas valide. Veillez vérifier le formulaire !"
-    );
-}
-
-function createContact() {
-  objetSend.contact.firstName = exportInput(testName, inputFirstName);
-  objetSend.contact.lastName = exportInput(testName, inputLastName);
-  objetSend.contact.address = exportInput(testAddress, inputAddress);
-  objetSend.contact.city = exportInput(testName, inputCity);
-  objetSend.contact.email = exportInput(testEmail, inputEmail);
-}
-
+/* La function d'envoi du formulaire et list de produit */
 function submitForm(e) {
   e.preventDefault();
 
@@ -330,6 +328,7 @@ function submitForm(e) {
     });
 }
 
+/* EVENT -- déclenchement de la soumission du formulaire */
 form.addEventListener("submit", (e) => {
   submitForm(e);
 });
