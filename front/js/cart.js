@@ -190,19 +190,15 @@ async function productsDisplaying(list) {
 /* l'appel de la fonction final */
 productsDisplaying(productsInCart);
 
-// window.addEventListener("click", (e) => console.log(e.target.value));
-// window.addEventListener("change", (e) => console.log(e.target.value));
-
 /* ----- ----- VERIFICATION DES DONNEES DU FORMULAIRE ----- ----- */
 
 /* Mes Regex */
-const regexEmail = new RegExp("^[a-z0-9._-]+@[a-z0-9-]+\\.[a-z0-9]{2,3}$");
+const regexEmail = new RegExp("^[a-zA-Z0-9._-]+@[a-z0-9-]+\\.[a-z0-9]{2,3}$");
 const regexNames = new RegExp("^[\\sa-zA-Zéèêëîïòôöûüùàäâç'-]+$");
-const regexAddress = new RegExp(
-  "^[\\d]{1,5}\\s[a-zA-Z]+\\s[\\sa-zA-Zéèêëîïòôöûüùàäâç'-]+$"
-);
+const regexAddress = new RegExp("^[\\d\\sa-zA-Zéèêëîïòôöûüùàäâç'-]{6,}$");
 
 /* Mes fonction de test des champs du formulaire */
+/* Fonction de test de l'input PRENOM */
 function testFirstName() {
   if (regexNames.test(inputFirstName.value)) {
     firstNameErrorMsg.innerHTML = "";
@@ -211,10 +207,11 @@ function testFirstName() {
     firstNameErrorMsg.innerHTML =
       "N'oubliez pas de remplir le champ avec votre prénom";
     return false;
-  } else firstNameErrorMsg.innerHTML = "Prénom, non valid !";
+  } else firstNameErrorMsg.innerHTML = "Prénom, non valide !";
   return false;
 }
 
+/* Fonction de test de l'input NOM */
 function testLastName() {
   if (regexNames.test(inputLastName.value)) {
     lastNameErrorMsg.innerHTML = "";
@@ -223,10 +220,11 @@ function testLastName() {
     lastNameErrorMsg.innerHTML =
       "N'oubliez pas de remplir le champ avec votre Nom";
     return false;
-  } else lastNameErrorMsg.innerHTML = "Nom, non valid !";
+  } else lastNameErrorMsg.innerHTML = "Nom, non valide !";
   return false;
 }
 
+/* Fonction de test de l'input ADRESSE */
 function testAddress() {
   if (regexAddress.test(inputAddress.value)) {
     addressErrorMsg.innerHTML = "";
@@ -237,10 +235,11 @@ function testAddress() {
     return false;
   } else
     addressErrorMsg.innerHTML =
-      "adresse, non valid ! Respecter l'exemple : 'numéro' 'voie' 'nom de la voie'";
+      "adresse, non valide ! Veuillez vérifier que votre adresse soit complète";
   return false;
 }
 
+/* Fonction de test de l'input VILLE */
 function testCity() {
   if (regexNames.test(inputCity.value)) {
     cityErrorMsg.innerHTML = "";
@@ -249,10 +248,11 @@ function testCity() {
     cityErrorMsg.innerHTML =
       "N'oubliez pas de remplir le champ avec votre ville";
     return false;
-  } else cityErrorMsg.innerHTML = "Ville, non valid !";
+  } else cityErrorMsg.innerHTML = "Ville, non valide !";
   return false;
 }
 
+/* Fonction de test de l'input EMAIL */
 function testEmail() {
   if (regexEmail.test(inputEmail.value)) {
     emailErrorMsg.innerHTML = "";
@@ -263,29 +263,34 @@ function testEmail() {
     return false;
   } else
     emailErrorMsg.innerHTML =
-      "email non valid ! Respecter l'exemple suivant : votremail@mail.com";
+      "email non valide ! Respecter l'exemple suivant : votremail@mail.com";
   return false;
 }
 
 /* EVENTS des diférent champs du formulaire */
+/* Event Listener de l'input prenom */
 inputFirstName.addEventListener("change", () => {
   testFirstName();
 });
 
-inputEmail.addEventListener("change", () => {
-  testEmail();
-});
-
+/* Event Listener de l'input nom */
 inputLastName.addEventListener("change", () => {
   testLastName();
 });
 
+/* Event Listener de l'input adresse */
 inputAddress.addEventListener("change", () => {
   testAddress();
 });
 
+/* Event Listener de l'input ville */
 inputCity.addEventListener("change", () => {
   testCity();
+});
+
+/* Event Listener de l'input email */
+inputEmail.addEventListener("change", () => {
+  testEmail();
 });
 
 /* ----- ----- ENVOI DU FORMULAIRE ----- ----- */
@@ -337,9 +342,9 @@ function submitForm(e) {
       .catch((error) => console.log("error", error))
       .then((value) => {
         let orderId = value.orderId;
-        const url = new URL(window.location.href);
+        const url = new URL(window.location.origin);
         let route = "/front/html/confirmation.html";
-        let confirm = `${url.origin}${route}?orderid=${orderId}`;
+        let confirm = `${url}${route}?orderid=${orderId}`;
         window.location.href = confirm;
       });
   }

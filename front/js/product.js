@@ -77,7 +77,9 @@ function addProduct(e) {
   };
   let kanapLinea = JSON.stringify(kanapJson);
   localStorage.setItem(`${product.name} ${selectColor}`, kanapLinea);
-  alert(`${selectQuantity} ${product.name} ${selectColor} dans votre panier !`);
+  console.log(
+    `${selectQuantity} ${product.name} ${selectColor} dans votre panier !`
+  );
 }
 
 /* ----- EVENT ----- */
