@@ -267,7 +267,8 @@ function testEmail() {
   return false;
 }
 
-/* EVENTS des diférent champs du formulaire */
+/* ----- EVENTS ----- 
+des diférent champs du formulaire */
 /* Event Listener de l'input prenom */
 inputFirstName.addEventListener("change", () => {
   testFirstName();
@@ -350,7 +351,8 @@ function submitForm(e) {
   }
 }
 
-/* EVENT -- déclenchement de la soumission du formulaire */
+/* ----- EVENT ----- */
+/* déclenchement de la soumission du formulaire */
 form.addEventListener("submit", (e) => {
   submitForm(e);
 });
